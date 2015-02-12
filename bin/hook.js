@@ -13,6 +13,10 @@ dnode.connect(port, function (remote, conn) {
         conn.end();
         process.exit(ok ? 0 : 1);
     }
+
+    function output(s) {
+        console.log(s);
+    }
     
     if (readsStdin.indexOf(hookName) >= 0) {
         var data = '';
@@ -21,6 +25,7 @@ dnode.connect(port, function (remote, conn) {
             remote.emit(hookName, {
                 lines : data.split(/\r?\n/),
                 arguments : process.argv.slice(2),
+                output : output,
             }, finish);
         });
         
@@ -29,6 +34,7 @@ dnode.connect(port, function (remote, conn) {
     else {
         remote.emit(hookName, {
             arguments : process.argv.slice(2),
+            output : output,
         }, finish);
     }
 });
